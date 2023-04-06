@@ -17,7 +17,7 @@
 *   Install docker as per your operating system. [Link to docker docs](https://docs.docker.com/engine/install/ubuntu/#installation-methods).
 
     > **Note**
-    > Make sure you follow the [post install instructions](https://docs.docker.com/engine/install/linux-postinstall/) or similar related. [posts](https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket).
+    > Make sure you follow the [post installation instructions](https://docs.docker.com/engine/install/linux-postinstall/) or similar [posts](https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket).
 
 *   Clone the repo. All the compose related commands are supposed to be run from the root directory of the project (i.e., `cd the-folder-you-just-cloned`).
 
@@ -87,9 +87,6 @@ You can use [DBeaver](https://dbeaver.io/download/) or the VS Code extension to 
 # Current workflow
 
 `./startup` folder will have the sql files which run every time the database is started. Since they run every time they always throw some errors which I think we can safely ignore for now. So we will be creating similar files grouping them by the job they do.
-
-> **Note**
-> Every time you change the files in startup folder
 
 # References
 
