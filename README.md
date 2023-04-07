@@ -8,6 +8,7 @@
 *   [Other commands](#other-commands)
 *   [Connecting with other tools](#connecting-with-other-tools)
 *   [Current workflow](#current-workflow)
+*   [Debugging](#debugging)
 *   [References](#references)
 
 # Getting started
@@ -44,6 +45,12 @@
 ## Optional
 
 *   Run `yarn` in the root directory to install `remark` for markdown formatting.
+*   Install `rlwrap` (linux) using your package manager. While starting sqlplus execute it as below this way you can use sqlplus prompt similar to that of a normal terminal (Arrow keys to get previous command etc.,).
+
+    ```bash
+    # Those flags are to make it work with docker.
+    rlwrap -a -N docker exec -it oracle-sql-db sqlplus / as sysdba
+    ```
 
 # Other commands
 
@@ -56,7 +63,7 @@ These are a very few select commands. For more information you can always visit 
     ```
 
     > **Note**
-    > You will still face the same problems that you face in lab while using sqlplus.
+    > You will still face the same problems that you face in lab while using sqlplus which you can get around by using `rlwrap`. Check [optional](#optional) for instructions.
 
 *   To reset the database to the initial state.
 
@@ -88,7 +95,15 @@ You can use [DBeaver](https://dbeaver.io/download/) or the VS Code extension to 
 
 `./startup` folder will have the sql files which run every time the database is started. Since they run every time they always throw some errors which I think we can safely ignore for now. So we will be creating similar files grouping them by the job they do.
 
+# Debugging
+
+*   Check for missing semicolons.
+*   Check for spelling mistakes.
+*   Check if the data types are same.
+*   Try running the same query in sqlplus and use `show err;` to see the errors.
+
 # References
 
 *   [Oracle database container repository.](https://container-registry.oracle.com/ords/f?p=113:4:5505774220922:::4:P4_REPOSITORY,AI_REPOSITORY,AI_REPOSITORY_NAME,P4_REPOSITORY_NAME,P4_EULA_ID,P4_BUSINESS_AREA_ID:803,803,Oracle%20Database%20Express%20Edition,Oracle%20Database%20Express%20Edition,1,0\&cs=3ovGLBhIPtwiUSX6-52Lmzy52i5dPCeiH1H6Imux_1gaEMSsq5Dokm-R-CcPzzUfJ8PvVl0xIyXDv8emwFyuBwA)
 *   [Docker docs.](https://docs.docker.com/get-started/overview/)
+*   [Oracle PL/SQL youtube playlist.](https://www.youtube.com/playlist?list=PLL_LQvNX4xKyiExzq9GKwORoH6nvaRnOQ)
