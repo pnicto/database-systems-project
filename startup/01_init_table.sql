@@ -1,12 +1,12 @@
 -- create users table not singular here as user is a reserved word
 create table users (
   aadhar_id int,
-  name varchar(50) not null,
+  name varchar(20) not null,
   age int not null,
   door_number varchar(10) not null,
   city varchar(20) not null,
   street varchar(50) not null,
-  pincode varchar(5) not null,
+  pincode varchar(6) not null,
   role varchar(10) not null check (role in ('manager', 'customer', 'dba')),
   primary key (aadhar_id)
 );
