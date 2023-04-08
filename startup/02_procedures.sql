@@ -2,6 +2,7 @@
 create or replace procedure create_new_user (
   aadhar_id int,
   name varchar,
+  password varchar,
   age int,
   door_number varchar,
   city varchar,
@@ -15,6 +16,7 @@ begin
   insert into users values (
     aadhar_id,
     name,
+    password,
     age,
     door_number,
     city,

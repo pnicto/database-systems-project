@@ -2,6 +2,7 @@
 create table users (
   aadhar_id int,
   name varchar(20) not null,
+  password varchar(20) not null,
   age int not null,
   door_number varchar(10) not null,
   city varchar(20) not null,

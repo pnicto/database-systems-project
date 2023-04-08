@@ -1,8 +1,8 @@
 set serveroutput on;
 
-execute create_new_user (1, 'John', 15, '121', 'city', 'street', '515001', 'manager', '123456789');
+execute create_new_user (1, 'John', 'password', 15, '121', 'city', 'street', '515001', 'manager', '123456789');
 
-execute create_new_user (2, 'Doe', 40, '357', 'city', 'street', '500075', 'manager', '987654321');
+execute create_new_user (2, 'Doe', 'secure_pass', 40, '357', 'city', 'street', '500075', 'manager', '987654321');
 
 execute insert_property_record('residential', 1, 'Address', 100, 10, 50, 70, 50000, 'locality', date '2023-12-01', date '2024-12-01', 2001, 'flat', 1, 1, 3);
 
