@@ -32,6 +32,67 @@ begin
 end create_new_user;
 /
 
+-- procedure to insert property record
+create or replace procedure insert_property_record(
+  classification varchar,
+  property_id int,
+  address varchar,
+  annual_hike int,
+  number_of_floors int,
+  plinth_area int,
+  total_area int,
+  rent int,
+  locality varchar,
+  available_from date,
+  available_till date,
+  year_of_construction int,
+  type varchar,
+  owner_id int,
+  tenant_id int,
+  number_of_bedrooms int default null
+)is
+begin
+  if classification = 'commercial' then
+    insert into property_commercial values (
+      property_id,
+      address,
+      annual_hike,
+      number_of_floors,
+      plinth_area,
+      total_area,
+      rent,
+      locality,
+      available_from,
+      available_till,
+      year_of_construction,
+      type,
+      owner_id,
+      tenant_id
+    );
+    dbms_output.put_line( 'Inserted commercial property.' );
+  elsif classification = 'residential' then
+    insert into property_residential values (
+      property_id,
+      address,
+      annual_hike,
+      number_of_floors,
+      plinth_area,
+      total_area,
+      rent,
+      locality,
+      available_from,
+      available_till,
+      year_of_construction,
+      number_of_bedrooms,
+      type,
+      owner_id,
+      tenant_id
+    );
+    dbms_output.put_line('Inserted residential property.');
+  end if;
+end insert_property_record;
+/
+
 -- procedure to get tenant details given the property id
 create or replace procedure get_tenant_details (
   prop_id int
