@@ -24,6 +24,7 @@ alter table phone_numbers add constraint fk_phone_users foreign key (aadhar_id) 
 -- create residential property
 create table property_residential (
   property_id int,
+  address varchar(50) not null,
   annual_hike int not null,
   number_of_floors int,
   plinth_area int not null,
@@ -34,7 +35,7 @@ create table property_residential (
   available_till date not null,
   year_of_construction int not null,
   number_of_bedrooms int,
-  type varchar(10) not null check (type in ('flat', 'independent_house')),
+  type varchar(17) not null check (type in ('flat', 'independent_house')),
   owner_id int not null,
   tenant_id int,
   primary key (property_id)
@@ -53,7 +54,7 @@ create table property_commercial (
   available_from date not null,
   available_till date not null,
   year_of_construction int not null,
-  type varchar(10) not null check (type in ('shop', 'warehouse')),
+  type varchar(9) not null check (type in ('shop', 'warehouse')),
   owner_id int not null,
   tenant_id int,
   primary key (property_id)
