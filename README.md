@@ -1,15 +1,15 @@
 # CS F212 Database Systems Project
 
-*   [CS F212 Database Systems Project](#cs-f212-database-systems-project)
-*   [Getting started](#getting-started)
-    *   [Docker](#docker)
-    *   [VS Code](#vs-code)
-    *   [Optional](#optional)
-*   [Other commands](#other-commands)
-*   [Connecting with other tools](#connecting-with-other-tools)
-*   [Current workflow](#current-workflow)
-*   [Debugging](#debugging)
-*   [References](#references)
+- [CS F212 Database Systems Project](#cs-f212-database-systems-project)
+- [Getting started](#getting-started)
+  - [Docker](#docker)
+  - [VS Code](#vs-code)
+  - [Optional](#optional)
+- [Other commands](#other-commands)
+- [Connecting with other tools](#connecting-with-other-tools)
+- [Current workflow](#current-workflow)
+- [Debugging](#debugging)
+- [References](#references)
 
 # Getting started
 
@@ -38,7 +38,7 @@
 
 *   [Install VS Code Oracle Developer Tools extension.](https://marketplace.visualstudio.com/items?itemName=Oracle.oracledevtools)
 
-*   In the command palette look for `Oracle SQL Formatter Settings` and import the `oracle-formatter-settings.json` file. for consistent formatting.
+*   In the command palette look for `Oracle SQL Formatter Settings` and import the `oracle-formatter-settings.json` file and save for consistent formatting.
 
 *   Refer  [connecting with other tools](#connecting-with-other-tools) to connect the extension with the database.
 
@@ -82,7 +82,7 @@ These are a very few select commands. For more information you can always visit 
 
 # Connecting with other tools
 
-You can use [DBeaver](https://dbeaver.io/download/) or the VS Code extension to connect to the database with the following details.
+You can use [DBeaver](https://dbeaver.io/download/) or the Oracle VS Code extension to connect to the database with the following details.
 
 *   Host: localhost
 *   Port: 1521
