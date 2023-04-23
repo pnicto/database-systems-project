@@ -61,6 +61,27 @@ create table property_commercial (
   primary key (property_id)
 );
 
+-- create property history table
+create table property_history (
+  property_record_id int not null,
+  propert_id int not null,
+  address varchar(50) not null,
+  annual hike int not null,
+  number_of_floors int,
+  plinth_area int not null,
+  total_area int not null,
+  rent int,
+  locality varchar(50),
+  available_from date not null,
+  available_till date not null,
+  year_of_construction int not null,
+  number_of_bedrooms int,
+  property_type varchar(11) not null check (property_type in ('residential', 'commercial')),
+  type varchar(17) not null check (type in ('flat', 'independent_house', 'shop', 'warehouse')),
+  is_current int not null check (is_current in (0, 1)),
+  primary key (property_record_id)
+)
+
 -- foreign key between users and residential properties
 alter table property_residential add constraint fk_property_residential_owners foreign key ( owner_id ) references users( aadhar_id );
 
