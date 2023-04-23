@@ -80,7 +80,34 @@ create table property_history (
   type varchar(17) not null check (type in ('flat', 'independent_house', 'shop', 'warehouse')),
   is_current int not null check (is_current in (0, 1)),
   primary key (property_record_id)
-)
+);
+
+-- create user history table
+create table users_history (
+  user_record_id int not null,
+  aadhar_id int not null,
+  name varchar(20) not null,
+  password varchar(20) not null,
+  age int not null,
+  door_number varchar(10) not null,
+  city varchar(20) not null,
+  street varchar(50) not null,
+  pincode varchar(6) not null,
+  role varchar(10) not null check (role in ('manager', 'customer', 'dba')),
+  is_current int not null check (is_current in (0, 1)),
+  primary key (user_record_id)
+);
+
+-- create phone number history table
+create table phone_numbers_history (
+  user_record_id int not null,
+  phone varchar(10) not null,
+  primary_key (user_record_id, phone)
+);
+
+-- foreign key between users history and phone number history
+alter table phone_numbers_history add constraint fk_phone_history_users foreign key (user_record_id) references users_history(user_record_id);
+
 
 -- foreign key between users and residential properties
 alter table property_residential add constraint fk_property_residential_owners foreign key ( owner_id ) references users( aadhar_id );
