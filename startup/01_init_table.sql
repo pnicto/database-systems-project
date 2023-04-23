@@ -108,6 +108,23 @@ create table phone_numbers_history (
 -- foreign key between users history and phone number history
 alter table phone_numbers_history add constraint fk_phone_history_users foreign key (user_record_id) references users_history(user_record_id);
 
+-- create records table  
+create table records (
+  record_id int not null,
+  date_of_record date not null,
+  owner_record_id int not null,
+  tenant_record_id int not null,
+  property_record_id int not null,
+  primary key (record_id)
+); 
+
+-- foreign keys from record table to other history tables
+alter table records add constraint fk_records_owner_history foreign key (owner_record_id) references users_history(user_record_id);
+
+alter table records add constraint fk_records_tenant_history foreign key (tenant_record_id) references users_history(user_record_id);
+
+alter table records add constraint fk_records_property_history foreign key (property_record_id) references property_history(property_record_id);
+
 
 -- foreign key between users and residential properties
 alter table property_residential add constraint fk_property_residential_owners foreign key ( owner_id ) references users( aadhar_id );
