@@ -1,5 +1,7 @@
 connect c##project_dba/password;
-set serveroutput on; 
+
+set serveroutput on;
+
 -- procedure to create new user
 create or replace procedure create_new_user (
   aadhar_id int,
@@ -150,60 +152,77 @@ begin
 end get_tenant_details;
 /
 
-create or replace trigger users_history_trigger
-  before insert or update or delete on users
-  for each row
-declare
-  record_id number;
-begin
-  select MAX(user_record_id) into record_id from users_history;
-  if inserting then
-    if record_id is null then
-      record_id := 0;
+create or replace trigger users_history_trigger before
+  insert or
+    update or
+      delete on users for each row
+    declare
+      record_id number;
+  begin
+    select
+      max(user_record_id) into record_id
+    from
+      users_history;
+    if inserting then
+      if record_id is null then
+        record_id := 0;
+      end if;
+      insert into users_history values (
+        record_id + 1,
+        :new.aadhar_id,
+        :new.name,
+        :new.password,
+        :new.age,
+        :new.door_number,
+        :new.city,
+        :new.street,
+        :new.pincode,
+        :new.role,
+        1
+      );
+    elsif updating then
+      update users_history
+      set
+        is_current = 0
+      where
+        aadhar_id = :old.aadhar_id;
+      insert into users_history values (
+        record_id + 1,
+        :new.aadhar_id,
+        :new.name,
+        :new.password,
+        :new.age,
+        :new.door_number,
+        :new.city,
+        :new.street,
+        :new.pincode,
+        :new.role,
+        1
+      );
+    elsif deleting then
+      update users_history
+      set
+        is_current = 0
+      where
+        aadhar_id = :old.aadhar_id;
     end if;
-    insert into users_history values (
-      record_id + 1,
-      :new.aadhar_id,
-      :new.name,
-      :new.password,
-      :new.age,
-      :new.door_number,
-      :new.city,
-      :new.street,
-      :new.pincode,
-      :new.role,
-      1
-    );
-  elsif updating then
-    update users_history set is_current = 0 where aadhar_id = :old.aadhar_id;
-    insert into users_history values (
-      record_id + 1,
-      :new.aadhar_id,
-      :new.name,
-      :new.password,
-      :new.age,
-      :new.door_number,
-      :new.city,
-      :new.street,
-      :new.pincode,
-      :new.role,
-      1
-    );
-  elsif deleting then
-    update users_history set is_current = 0 where aadhar_id = :old.aadhar_id;
-  end if;
-end users_history_trigger;
+  end users_history_trigger;
 /
 
-create or replace trigger
-phone_numbers_history_trigger
-  before insert or update on phone_numbers
-  for each row
-declare
-  user_id int;
+create or replace trigger phone_numbers_history_trigger before
+  insert or
+    update on phone_numbers for each row
+  declare
+    user_id int;
 begin
   if inserting or updating then
-    select user_record_id into user_id from users_history where aadhar_id = :new.aadhar_id and is_current = 1;
+    select
+      user_record_id into user_id
+    from
+      users_history
+    where
+      aadhar_id = :new.aadhar_id
+      and is_current = 1;
     insert into phone_numbers_history values (
       user_id,
       :new.phone
@@ -212,112 +231,482 @@ begin
 end phone_numbers_history_trigger;
 /
 
-create or replace trigger residential_property_history_trigger
-  before insert or update or delete on property_residential
-  for each row
-declare
-  record_id number;
-begin
-  select MAX(property_record_id) into record_id from property_history;
-  if inserting then
-    if record_id is null then
-      record_id := 0;
+create or replace trigger residential_property_history_trigger before
+  insert or
+    update or
+      delete on property_residential for each row
+    declare
+      record_id number;
+  begin
+    select
+      max(property_record_id) into record_id
+    from
+      property_history;
+    if inserting then
+      if record_id is null then
+        record_id := 0;
+      end if;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        :new.number_of_bedrooms,
+        'residential',
+        :new.type,
+        1
+      );
+    elsif updating then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        :new.number_of_bedrooms,
+        'residential',
+        :new.type,
+        1
+      );
+    elsif deleting then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
     end if;
-    insert into property_history values (
-      record_id + 1,
-      :new.property_id,
-      :new.address,
-      :new.annual_hike,
-      :new.number_of_floors,
-      :new.plinth_area,
-      :new.total_area,
-      :new.rent,
-      :new.locality,
-      :new.available_from,
-      :new.available_till,
-      :new.year_of_construction,
-      :new.number_of_bedrooms,
-      'residential',
-      :new.type,
-      1
-    );
-  elsif updating then
-    update property_history set is_current = 0 where property_id = :old.property_id;
-    insert into property_history values (
-      record_id + 1,
-      :new.property_id,
-      :new.address,
-      :new.annual_hike,
-      :new.number_of_floors,
-      :new.plinth_area,
-      :new.total_area,
-      :new.rent,
-      :new.locality,
-      :new.available_from,
-      :new.available_till,
-      :new.year_of_construction,
-      :new.number_of_bedrooms,
-      'residential',
-      :new.type,
-      1
-    );
-  elsif deleting then
-    update property_history set is_current = 0 where property_id = :old.property_id;
-  end if;
-end residential_property_history_trigger;
+  end residential_property_history_trigger;
 /
 
-create or replace trigger commercial_property_history_trigger
-  before insert or update or delete on property_commercial
-  for each row
-declare
-  record_id number;
-begin
-  select MAX(property_record_id) into record_id from property_history;
-  if inserting then
-    if record_id is null then
-      record_id := 0;
+create or replace trigger commercial_property_history_trigger before
+  insert or
+    update or
+      delete on property_commercial for each row
+    declare
+      record_id number;
+  begin
+    select
+      max(property_record_id) into record_id
+    from
+      property_history;
+    if inserting then
+      if record_id is null then
+        record_id := 0;
+      end if;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        null,
+        'commercial',
+        :new.type,
+        1
+      );
+    elsif updating then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        null,
+        'commercial',
+        :new.type,
+        1
+      );
+    elsif deleting then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
     end if;
-    insert into property_history values (
-      record_id + 1,
-      :new.property_id,
-      :new.address,
-      :new.annual_hike,
-      :new.number_of_floors,
-      :new.plinth_area,
-      :new.total_area,
-      :new.rent,
-      :new.locality,
-      :new.available_from,
-      :new.available_till,
-      :new.year_of_construction,
-      null,
-      'commercial',
-      :new.type,
-      1
+  end commercial_property_history_trigger;
+/
+
+create or replace trigger users_history_trigger before
+  insert or
+    update or
+      delete on users for each row
+    declare
+      record_id number;
+  begin
+    select
+      max(user_record_id) into record_id
+    from
+      users_history;
+    if inserting then
+      if record_id is null then
+        record_id := 0;
+      end if;
+      insert into users_history values (
+        record_id + 1,
+        :new.aadhar_id,
+        :new.name,
+        :new.password,
+        :new.age,
+        :new.door_number,
+        :new.city,
+        :new.street,
+        :new.pincode,
+        :new.role,
+        1
+      );
+    elsif updating then
+      update users_history
+      set
+        is_current = 0
+      where
+        aadhar_id = :old.aadhar_id;
+      insert into users_history values (
+        record_id + 1,
+        :new.aadhar_id,
+        :new.name,
+        :new.password,
+        :new.age,
+        :new.door_number,
+        :new.city,
+        :new.street,
+        :new.pincode,
+        :new.role,
+        1
+      );
+    elsif deleting then
+      update users_history
+      set
+        is_current = 0
+      where
+        aadhar_id = :old.aadhar_id;
+    end if;
+  end users_history_trigger;
+/
+
+create or replace trigger phone_numbers_history_trigger before
+  insert or
+    update on phone_numbers for each row
+  declare
+    user_id int;
+begin
+  if inserting or updating then
+    select
+      user_record_id into user_id
+    from
+      users_history
+    where
+      aadhar_id = :new.aadhar_id
+      and is_current = 1;
+    insert into phone_numbers_history values (
+      user_id,
+      :new.phone
     );
-  elsif updating then
-    update property_history set is_current = 0 where property_id = :old.property_id;
-    insert into property_history values (
-      record_id + 1,
-      :new.property_id,
-      :new.address,
-      :new.annual_hike,
-      :new.number_of_floors,
-      :new.plinth_area,
-      :new.total_area,
-      :new.rent,
-      :new.locality,
-      :new.available_from,
-      :new.available_till,
-      :new.year_of_construction,
-      null,
-      'commercial',
-      :new.type,
-      1
-    );
-  elsif deleting then
-    update property_history set is_current = 0 where property_id = :old.property_id;
   end if;
-end commercial_property_history_trigger;
+end phone_numbers_history_trigger;
+/
+
+create or replace trigger residential_property_history_trigger before
+  insert or
+    update or
+      delete on property_residential for each row
+    declare
+      record_id number;
+  begin
+    select
+      max(property_record_id) into record_id
+    from
+      property_history;
+    if inserting then
+      if record_id is null then
+        record_id := 0;
+      end if;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        :new.number_of_bedrooms,
+        'residential',
+        :new.type,
+        1
+      );
+    elsif updating then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        :new.number_of_bedrooms,
+        'residential',
+        :new.type,
+        1
+      );
+    elsif deleting then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
+    end if;
+  end residential_property_history_trigger;
+/
+
+create or replace trigger commercial_property_history_trigger before
+  insert or
+    update or
+      delete on property_commercial for each row
+    declare
+      record_id number;
+  begin
+    select
+      max(property_record_id) into record_id
+    from
+      property_history;
+    if inserting then
+      if record_id is null then
+        record_id := 0;
+      end if;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        null,
+        'commercial',
+        :new.type,
+        1
+      );
+    elsif updating then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
+      insert into property_history values (
+        record_id + 1,
+        :new.property_id,
+        :new.address,
+        :new.annual_hike,
+        :new.number_of_floors,
+        :new.plinth_area,
+        :new.total_area,
+        :new.rent,
+        :new.locality,
+        :new.available_from,
+        :new.available_till,
+        :new.year_of_construction,
+        null,
+        'commercial',
+        :new.type,
+        1
+      );
+    elsif deleting then
+      update property_history
+      set
+        is_current = 0
+      where
+        property_id = :old.property_id;
+    end if;
+  end commercial_property_history_trigger;
+/
+
+-- procedure to get all property details for given owner id
+create or replace procedure get_property_records (
+  own_id int
+) is
+  var_property_id          int;
+  var_address              varchar(50);
+  var_annual_hike          int;
+  var_number_of_floors     int;
+  var_plinth_area          int;
+  var_total_area           int;
+  var_rent                 int;
+  var_locality             varchar(50);
+  var_available_from       date;
+  var_available_till       date;
+  var_year_of_construction int;
+  var_type                 varchar(17);
+  var_tenant_id            int;
+  var_number_of_bedrooms   int;
+  cursor commercial_cursor is
+    select
+      property_id,
+      address,
+      annual_hike,
+      number_of_floors,
+      plinth_area,
+      total_area,
+      rent,
+      locality,
+      available_from,
+      available_till,
+      year_of_construction,
+      type,
+      tenant_id
+    from
+      property_commercial
+    where
+      owner_id = own_id;
+  cursor residential_cursor is
+    select
+      property_id,
+      address,
+      annual_hike,
+      number_of_floors,
+      plinth_area,
+      total_area,
+      rent,
+      locality,
+      available_from,
+      available_till,
+      year_of_construction,
+      number_of_bedrooms,
+      type,
+      tenant_id
+    from
+      property_residential
+    where
+      owner_id = own_id;
+begin
+  open commercial_cursor;
+  loop
+    fetch commercial_cursor into var_property_id, var_address, var_annual_hike, var_number_of_floors, var_plinth_area, var_total_area, var_rent, var_locality, var_available_from, var_available_till, var_year_of_construction, var_type, var_tenant_id;
+    exit when commercial_cursor%notfound;
+    dbms_output.put_line('COMMERCIAL PROPERTY '
+      || commercial_cursor%rowcount
+      || ':');
+    dbms_output.put_line('property_id: '
+      || var_property_id);
+    dbms_output.put_line('address: '
+      || var_address);
+    dbms_output.put_line('annual_hike: '
+      || var_annual_hike);
+    dbms_output.put_line('number_of_floors: '
+      || var_number_of_floors);
+    dbms_output.put_line('plinth_area: '
+      || var_plinth_area);
+    dbms_output.put_line('total_area: '
+      || var_total_area);
+    dbms_output.put_line('rent: '
+      || var_rent);
+    dbms_output.put_line('locality: '
+      || var_locality);
+    dbms_output.put_line('available_from: '
+      || var_available_from);
+    dbms_output.put_line('available_till: '
+      || var_available_till);
+    dbms_output.put_line('year_of_construction: '
+      || var_year_of_construction);
+    dbms_output.put_line('type: '
+      || var_type);
+    dbms_output.put_line('tenant_id: '
+      || var_tenant_id
+      || chr(10));
+  end loop;
+  open residential_cursor;
+  loop
+    fetch residential_cursor into var_property_id, var_address, var_annual_hike, var_number_of_floors, var_plinth_area, var_total_area, var_rent, var_locality, var_available_from, var_available_till, var_year_of_construction, var_number_of_bedrooms, var_type, var_tenant_id;
+    exit when residential_cursor%notfound;
+    dbms_output.put_line('RESIDENTIAL PROPERTY '
+      || residential_cursor%rowcount
+      || ':');
+    dbms_output.put_line('property_id: '
+      || var_property_id);
+    dbms_output.put_line('address: '
+      || var_address);
+    dbms_output.put_line('annual_hike: '
+      || var_annual_hike);
+    dbms_output.put_line('number_of_floors: '
+      || var_number_of_floors);
+    dbms_output.put_line('plinth_area: '
+      || var_plinth_area);
+    dbms_output.put_line('total_area: '
+      || var_total_area);
+    dbms_output.put_line('rent: '
+      || var_rent);
+    dbms_output.put_line('locality: '
+      || var_locality);
+    dbms_output.put_line('available_from: '
+      || var_available_from);
+    dbms_output.put_line('available_till: '
+      || var_available_till);
+    dbms_output.put_line('year_of_construction: '
+      || var_year_of_construction);
+    dbms_output.put_line('number_of_bedrooms: '
+      || var_number_of_bedrooms);
+    dbms_output.put_line('type: '
+      || var_type);
+    dbms_output.put_line('tenant_id: '
+      || var_tenant_id
+      || chr(10));
+  end loop;
+end get_property_records;
 /
