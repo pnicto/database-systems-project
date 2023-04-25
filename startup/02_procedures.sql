@@ -708,5 +708,7 @@ begin
       || var_tenant_id
       || chr(10));
   end loop;
+  close commercial_cursor;
+  close residential_cursor;
 end get_property_records;
 /
