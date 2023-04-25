@@ -195,6 +195,23 @@ begin
 end users_history_trigger;
 /
 
+create or replace trigger
+phone_numbers_history_trigger
+  before insert or update on phone_numbers
+  for each row
+declare
+  user_id int;
+begin
+  if inserting or updating then
+    select user_record_id into user_id from users_history where aadhar_id = :new.aadhar_id and is_current = 1;
+    insert into phone_numbers_history values (
+      user_id,
+      :new.phone
+    );
+  end if;
+end phone_numbers_history_trigger;
+/
+
 create or replace trigger residential_property_history_trigger
   before insert or update or delete on property_residential
   for each row
