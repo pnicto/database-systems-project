@@ -147,3 +147,49 @@ begin
   end;
 end get_tenant_details;
 /
+
+create or replace trigger users_history 
+before insert or update or delete on users 
+for each row
+declare
+  max_index number;
+begin
+  if inserting then
+    update users_history set is_current = 0 where aadhar_id = :new.aadhar_id and is_current = 1;
+
+    select max(user_record_id) into max_index from users_history;
+    insert into users_history values (
+      max_index + 1,
+      :new.aadhar_id,
+      :new.name,
+      :new.password,
+      :new.age,
+      :new.door_number,
+      :new.city,
+      :new.street,
+      :new.pincode,
+      :new.role,
+      1,
+    );
+  elsif updating then
+    update users_history set is_current = 0 where aadhar_id = :old.aadhar_id and is_current = 1;
+
+    select max(user_record_id) into max_index from users_history;
+    insert into users_history values (
+      max_index + 1,
+      :new.aadhar_id,
+      :new.name,
+      :new.password,
+      :new.age,
+      :new.door_number,
+      :new.city,
+      :new.street,
+      :new.pincode,
+      :new.role,
+      1,
+    );
+  elsif deleting then
+    update users_history set is_current = 0 where aadhar_id = :old.aadhar_id and is_current = 1;
+  end if;
+end users_history;
+/
