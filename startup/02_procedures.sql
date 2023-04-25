@@ -283,7 +283,7 @@ begin
 end get_property_records;
 /
 
--- procedure to get all property details located in given locality
+-- procedure to get all property details located in given locality with no tenant
 create or replace procedure search_property_for_rent(
   locale varchar2
 ) is
@@ -308,14 +308,16 @@ create or replace procedure search_property_for_rent(
     from
       property_commercial
     where
-      locality = locale;
+      locality = locale
+      and tenant_id is null;
   cursor residential_cursor is
     select
       *
     from
       property_residential
     where
-      locality = locale;
+      locality = locale
+      and tenant_id is null;
 begin
   open commercial_cursor;
   loop
@@ -347,9 +349,7 @@ begin
     dbms_output.put_line('type: '
       || var_type);
     dbms_output.put_line('owner_id: '
-      || var_owner_id);
-    dbms_output.put_line('tenant_id: '
-      || var_tenant_id
+      || var_owner_id
       || chr(10));
   end loop;
   open residential_cursor;
@@ -384,9 +384,7 @@ begin
     dbms_output.put_line('type: '
       || var_type);
     dbms_output.put_line('owner_id: '
-      || var_owner_id);
-    dbms_output.put_line('tenant_id: '
-      || var_tenant_id
+      || var_owner_id
       || chr(10));
   end loop;
   close commercial_cursor;
