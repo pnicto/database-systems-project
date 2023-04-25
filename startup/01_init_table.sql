@@ -64,7 +64,7 @@ create table property_commercial (
 -- create property history table
 create table property_history (
   property_record_id int not null,
-  propert_id int not null,
+  property_id int not null,
   address varchar(50) not null,
   annual hike int not null,
   number_of_floors int,
