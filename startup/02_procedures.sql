@@ -148,7 +148,7 @@ begin
 end get_tenant_details;
 /
 
-create or replace trigger users_history 
+create or replace trigger users_history_trigger 
 before insert or update or delete on users 
 for each row
 declare
