@@ -302,4 +302,4 @@ begin
     update property_history set is_current = 0 where property_id = :old.property_id and is_current = 1;
   end if;
 end property_history_trigger_commercial;
-
+/
