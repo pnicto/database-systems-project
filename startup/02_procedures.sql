@@ -149,7 +149,7 @@ end get_tenant_details;
 /
 
 create or replace trigger users_history_trigger 
-before insert or update or delete on users 
+after insert or update or delete on users 
 for each row
 declare
   max_index number;
@@ -193,7 +193,7 @@ end users_history;
 /
 
 create or replace trigger property_history_trigger_residential
-before insert or update or delete on property_residential
+after insert or update or delete on property_residential
 for each row
 declare
   max_index number;
@@ -250,7 +250,7 @@ end property_history_trigger_residential;
 /
 
 create or replace trigger property_history_trigger_commercial
-before insert or update or delete on property_commercial
+after insert or update or delete on property_commercial
 for each row
 declare
   max_index number;
