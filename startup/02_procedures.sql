@@ -155,8 +155,6 @@ declare
   max_index number;
 begin
   if inserting then
-    update users_history set is_current = 0 where aadhar_id = :new.aadhar_id and is_current = 1;
-
     select max(user_record_id) into max_index from users_history;
     insert into users_history values (
       max_index + 1,
