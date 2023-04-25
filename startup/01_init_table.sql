@@ -1,3 +1,18 @@
+-- create manager and customer roles
+
+create role user_manager;
+grant select, insert, update, delete on property_residential to user_manager;
+grant select, insert, update, delete on property_commercial to user_manager;
+grant select, insert, update, delete on property_history to user_manager;
+grant select, insert, update, delete on records to user_manager;
+grant select on users_history to user_manager;
+
+create role user_customer;
+grant select on property_residential to user_customer;
+grant select on property_commercial to user_customer;
+grant select on property_history to user_customer;
+grant select on records to user_customer;
+
 -- create users table not singular here as user is a reserved word
 create table users (
   aadhar_id int,
