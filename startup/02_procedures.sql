@@ -194,3 +194,113 @@ begin
   end if;
 end users_history_trigger;
 /
+
+create or replace trigger residential_property_history_trigger
+  before insert or update or delete on property_residential
+  for each row
+declare
+  record_id number;
+begin
+  select MAX(property_record_id) into record_id from property_history;
+  if inserting then
+    if record_id is null then
+      record_id := 0;
+    end if;
+    insert into property_history values (
+      record_id + 1,
+      :new.property_id,
+      :new.address,
+      :new.annual_hike,
+      :new.number_of_floors,
+      :new.plinth_area,
+      :new.total_area,
+      :new.rent,
+      :new.locality,
+      :new.available_from,
+      :new.available_till,
+      :new.year_of_construction,
+      :new.number_of_bedrooms,
+      'residential',
+      :new.type,
+      1
+    );
+  elsif updating then
+    update property_history set is_current = 0 where property_id = :old.property_id;
+    insert into property_history values (
+      record_id + 1,
+      :new.property_id,
+      :new.address,
+      :new.annual_hike,
+      :new.number_of_floors,
+      :new.plinth_area,
+      :new.total_area,
+      :new.rent,
+      :new.locality,
+      :new.available_from,
+      :new.available_till,
+      :new.year_of_construction,
+      :new.number_of_bedrooms,
+      'residential',
+      :new.type,
+      1
+    );
+  elsif deleting then
+    update property_history set is_current = 0 where property_id = :old.property_id;
+  end if;
+end residential_property_history_trigger;
+/
+
+create or replace trigger commercial_property_history_trigger
+  before insert or update or delete on property_commercial
+  for each row
+declare
+  record_id number;
+begin
+  select MAX(property_record_id) into record_id from property_history;
+  if inserting then
+    if record_id is null then
+      record_id := 0;
+    end if;
+    insert into property_history values (
+      record_id + 1,
+      :new.property_id,
+      :new.address,
+      :new.annual_hike,
+      :new.number_of_floors,
+      :new.plinth_area,
+      :new.total_area,
+      :new.rent,
+      :new.locality,
+      :new.available_from,
+      :new.available_till,
+      :new.year_of_construction,
+      null,
+      'commercial',
+      :new.type,
+      1
+    );
+  elsif updating then
+    update property_history set is_current = 0 where property_id = :old.property_id;
+    insert into property_history values (
+      record_id + 1,
+      :new.property_id,
+      :new.address,
+      :new.annual_hike,
+      :new.number_of_floors,
+      :new.plinth_area,
+      :new.total_area,
+      :new.rent,
+      :new.locality,
+      :new.available_from,
+      :new.available_till,
+      :new.year_of_construction,
+      null,
+      'commercial',
+      :new.type,
+      1
+    );
+  elsif deleting then
+    update property_history set is_current = 0 where property_id = :old.property_id;
+  end if;
+end commercial_property_history_trigger;
+/
