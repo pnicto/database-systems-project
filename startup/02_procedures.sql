@@ -1,3 +1,5 @@
+connect c##project_dba/password;
+
 -- procedure to create new user
 create or replace procedure create_new_user (
   aadhar_id int,

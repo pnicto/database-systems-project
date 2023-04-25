@@ -1,3 +1,18 @@
+-- create project dba user with necessary perms
+create user c##project_dba identified by password default tablespace users temporary tablespace temp;
+
+alter user c##project_dba quota unlimited on users;
+
+grant connect to c##project_dba;
+
+grant create table to c##project_dba;
+
+grant create procedure to c##project_dba;
+
+grant create trigger to c##project_dba;
+
+connect c##project_dba/password;
+
 -- create users table not singular here as user is a reserved word
 create table users (
   aadhar_id int,
