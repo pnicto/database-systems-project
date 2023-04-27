@@ -1,3 +1,18 @@
+-- create project dba user with necessary perms
+create user c##project_dba identified by password default tablespace users temporary tablespace temp;
+
+alter user c##project_dba quota unlimited on users;
+
+grant connect to c##project_dba;
+
+grant create table to c##project_dba;
+
+grant create procedure to c##project_dba;
+
+grant create trigger to c##project_dba;
+
+connect c##project_dba/password;
+
 -- create users table not singular here as user is a reserved word
 create table users (
   aadhar_id int,
@@ -64,9 +79,9 @@ create table property_commercial (
 -- create property history table
 create table property_history (
   property_record_id int not null,
-  propert_id int not null,
+  property_id int not null,
   address varchar(50) not null,
-  annual hike int not null,
+  annual_hike int not null,
   number_of_floors int,
   plinth_area int not null,
   total_area int not null,
@@ -102,13 +117,13 @@ create table users_history (
 create table phone_numbers_history (
   user_record_id int not null,
   phone varchar(10) not null,
-  primary_key (user_record_id, phone)
+  primary key (user_record_id, phone)
 );
 
 -- foreign key between users history and phone number history
 alter table phone_numbers_history add constraint fk_phone_history_users foreign key (user_record_id) references users_history(user_record_id);
 
--- create records table  
+-- create records table
 create table records (
   record_id int not null,
   date_of_record date not null,
@@ -116,7 +131,7 @@ create table records (
   tenant_record_id int not null,
   property_record_id int not null,
   primary key (record_id)
-); 
+);
 
 -- foreign keys from record table to other history tables
 alter table records add constraint fk_records_owner_history foreign key (owner_record_id) references users_history(user_record_id);
@@ -124,7 +139,6 @@ alter table records add constraint fk_records_owner_history foreign key (owner_r
 alter table records add constraint fk_records_tenant_history foreign key (tenant_record_id) references users_history(user_record_id);
 
 alter table records add constraint fk_records_property_history foreign key (property_record_id) references property_history(property_record_id);
-
 
 -- foreign key between users and residential properties
 alter table property_residential add constraint fk_property_residential_owners foreign key ( owner_id ) references users( aadhar_id );
