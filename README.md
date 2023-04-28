@@ -62,6 +62,11 @@ These are a very few select commands. For more information you can always visit 
     docker exec -it oracle-sql-db sqlplus / as sysdba
     ```
 
+    ```sql
+    -- Run inside sqlplus to use a different user
+    connect c##project_dba/password;
+    ```
+
     > **Note**
     > You will still face the same problems that you face in lab while using sqlplus which you can get around by using `rlwrap`. Check [optional](#optional) for instructions.
 
