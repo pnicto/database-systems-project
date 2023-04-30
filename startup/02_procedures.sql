@@ -402,7 +402,7 @@ end search_property_for_rent;
 create or replace procedure rent_property(
   p_id int,
   t_id int,
-  classification varchar,
+  classification varchar2,
   record_date date
 )is
   var_owner_id           int;
@@ -477,33 +477,79 @@ begin
 end rent_property;
 /
 
+-- procedure to get rent history given property id and type
 create or replace procedure get_rent_history (
   p_id int,
   classification varchar
 ) is
-  var_property_id int;
-  var_owner_id    int;
-  var_tenant_id   int;
-  var_record_date date;
+  var_owner_id            int;
+  var_tenant_id           int;
+  var_record_date         date;
+  var_property_record_id  int;
+  var_owner_name          varchar(20);
+  var_tenant_name         varchar(20);
+  var_owner_record_id     int;
+  var_tenant_record_id    int;
+  var_check_record_exists int;
+  cursor records_cursor is
+    select
+      property_record_id
+    from
+      property_history
+    where
+      property_id = p_id
+      and property_type = classification;
 begin
- -- get the record ids
-  select
-    date_of_record,
-    owner_record_id,
-    tenant_record_id,
-    property_record_id into var_record_date,
-    var_owner_id,
-    var_tenant_id,
-    var_property_id
-  from
-    records;
-  dbms_output.put_line('var date '
-    || var_record_date
-    || ' var owner '
-    || var_owner_record_id
-    || ' var tent '
-    || var_tenant_record_id
-    || ' var prop '
-    || var_property_record_id);
+  open records_cursor;
+  loop
+    fetch records_cursor into var_property_record_id;
+    exit when records_cursor%notfound;
+    select
+      count(*) into var_check_record_exists
+    from
+      records
+    where
+      property_record_id = var_property_record_id;
+    if(var_check_record_exists > 0) then
+      select
+        date_of_record,
+        owner_record_id,
+        tenant_record_id into var_record_date,
+        var_owner_record_id,
+        var_tenant_record_id
+      from
+        records
+      where
+        property_record_id = var_property_record_id;
+      select
+        aadhar_id,
+        name into var_owner_id,
+        var_owner_name
+      from
+        users_history
+      where
+        user_record_id = var_owner_record_id;
+      select
+        aadhar_id,
+        name into var_tenant_id,
+        var_tenant_name
+      from
+        users_history
+      where
+        user_record_id = var_tenant_record_id;
+      dbms_output.put_line('Record Date: '
+        || var_record_date);
+      dbms_output.put_line('Property Owner ID: '
+        || var_owner_id);
+      dbms_output.put_line('Property Owner Name: '
+        || var_owner_name);
+      dbms_output.put_line( 'Tenant ID: '
+        || var_tenant_id);
+      dbms_output.put_line('Tenant Name: '
+        || var_tenant_name
+        || chr(10));
+    end if;
+  end loop;
+  close records_cursor;
 end get_rent_history;
 /
