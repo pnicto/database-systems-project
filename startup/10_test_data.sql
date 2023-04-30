@@ -1,5 +1,6 @@
 connect c##project_dba/password;
-set serveroutput on; 
+
+set serveroutput on;
 
 execute create_new_user (205161944040, 'Ojas Dhar', 'password', 58, '815', 'Haridwar', 'Balasubramanian Marg', '065374', 'customer', '6390064081');
 
@@ -31,7 +32,7 @@ execute create_new_user (193678569153, 'Aniruddh Srinivasan', 'password', 39, '2
 
 execute create_new_user (352546413931, 'Samarth Batra', 'password', 47, '766', 'Karawal Nagar', 'Bahl', '614424', 'manager', '5177038397');
 
-execute insert_property_record('residential', 1, '76/77, Bains Street Faridabad-627417', 7, 3, 79, 111, 51600, 'Faridabad', date '2023-01-01', date '2024-01-01', 1941, 'independent_house', 492673121695, 205133557947, 2);
+execute insert_property_record('residential', 1, '76/77, Bains Street Faridabad-627417', 7, 3, 79, 111, 51600, 'Faridabad', date '2023-01-01', date '2024-01-01', 1941, 'independent_house', 492673121695, null, 2);
 
 execute insert_property_record('residential', 2, '47/12, Borah Path Nandyal-287446', 10, 19, 20, 62, 15500, 'Nandyal', date '2022-10-01', date '2025-10-01', 1993, 'flat', 492673121695, null, 2);
 
@@ -71,3 +72,6 @@ execute insert_property_record('commercial', 9, 'H.No. 85, Subramanian Zila, New
 
 execute insert_property_record('commercial', 10, '30/132, Sekhon Circle, Haridwar 447769', 8, 10, 32, 63, 18100, 'Haridwar', date '2022-06-01', date '2024-06-01', 1913, 'shop', 492673121695, 441844869868);
 
+execute rent_property(2, 205133557947, 'residential', date '2023-04-30');
+
+execute rent_property(2, 492673121695, 'residential', date '2026-04-30');
