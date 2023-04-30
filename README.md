@@ -85,6 +85,15 @@ These are a very few select commands. For more information you can always visit 
     > **Warning**
     > You will have to re-download the image again the next time you run `docker compose up` after running the above command.
 
+*   To access tables from other users
+
+    ```sql
+    -- Connect as a customer/manager
+    connect c##aadhar_id/password;
+    -- Replace users with any other table
+    select * from c##project_dba.users;
+    ```
+
 # Connecting with other tools
 
 You can use [DBeaver](https://dbeaver.io/download/) or the Oracle VS Code extension to connect to the database with the following details.
