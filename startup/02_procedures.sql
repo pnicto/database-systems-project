@@ -78,7 +78,6 @@ end create_new_user;
 -- procedure to insert property record
 create or replace procedure insert_property_record(
   classification varchar,
-  property_id int,
   address varchar,
   annual_hike int,
   number_of_floors int,
@@ -94,8 +93,19 @@ create or replace procedure insert_property_record(
   tenant_id int,
   number_of_bedrooms int default null
 )is
+  max_id int;
+  property_id int;
 begin
   if classification = 'commercial' then
+    select
+      max(property_id) into max_id
+    from
+      property_commercial;
+    if max_id is null then
+      property_id := 1;
+    else
+      property_id := max_id + 2;
+    end if;
     insert into property_commercial values (
       property_id,
       address,
@@ -114,6 +124,15 @@ begin
     );
     dbms_output.put_line( 'Inserted commercial property.' );
   elsif classification = 'residential' then
+    select 
+      max(property_id) into max_id 
+    from 
+      property_residential;
+    if max_id is null then
+      property_id := 2;
+    else
+      property_id := max_id + 2;
+    end if; 
     insert into property_residential values (
       property_id,
       address,
@@ -517,7 +536,6 @@ end rent_property;
 -- procedure to get rent history given property id and type
 create or replace procedure get_rent_history (
   p_id int,
-  classification varchar
 ) is
   var_owner_id            int;
   var_tenant_id           int;
@@ -528,6 +546,7 @@ create or replace procedure get_rent_history (
   var_owner_record_id     int;
   var_tenant_record_id    int;
   var_check_record_exists int;
+  classification          varchar2(20);
   cursor records_cursor is
     select
       property_record_id
@@ -537,6 +556,11 @@ create or replace procedure get_rent_history (
       property_id = p_id
       and property_type = classification;
 begin
+  if mod(p_id, 2) = 0 then
+    classification := 'commercial';
+  else
+    classification := 'residential';
+  end if;
   open records_cursor;
   loop
     fetch records_cursor into var_property_record_id;
