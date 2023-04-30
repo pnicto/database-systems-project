@@ -78,7 +78,6 @@ end create_new_user;
 -- procedure to insert property record
 create or replace procedure insert_property_record(
   classification varchar,
-  property_id int,
   address varchar,
   annual_hike int,
   number_of_floors int,
@@ -94,8 +93,19 @@ create or replace procedure insert_property_record(
   tenant_id int,
   number_of_bedrooms int default null
 )is
+  max_id int;
+  property_id int;
 begin
   if classification = 'commercial' then
+    select
+      max(property_id) into max_id
+    from
+      property_commercial;
+    if max_id is null then
+      property_id := 1;
+    else
+      property_id := max_id + 2;
+    end if;
     insert into property_commercial values (
       property_id,
       address,
@@ -114,6 +124,15 @@ begin
     );
     dbms_output.put_line( 'Inserted commercial property.' );
   elsif classification = 'residential' then
+    select 
+      max(property_id) into max_id 
+    from 
+      property_residential;
+    if max_id is null then
+      property_id := 2;
+    else
+      property_id := max_id + 2;
+    end if; 
     insert into property_residential values (
       property_id,
       address,
