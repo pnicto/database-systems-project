@@ -1,24 +1,9 @@
--- create manager and customer roles
-
-create role user_manager;
-grant select, insert, update, delete on property_residential to user_manager;
-grant select, insert, update, delete on property_commercial to user_manager;
-grant select, insert, update, delete on property_history to user_manager;
-grant select, insert, update, delete on records to user_manager;
-grant select on users_history to user_manager;
-
-create role user_customer;
-grant select on property_residential to user_customer;
-grant select on property_commercial to user_customer;
-grant select on property_history to user_customer;
-grant select on records to user_customer;
-
 -- create project dba user with necessary perms
 create user c##project_dba identified by password default tablespace users temporary tablespace temp;
 
 alter user c##project_dba quota unlimited on users;
 
-grant all privileges to c##project_dba;
+grant all privileges to c##project_dba container=all;
 
 connect c##project_dba/password;
 
