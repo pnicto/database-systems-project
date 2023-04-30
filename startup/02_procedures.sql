@@ -47,31 +47,31 @@ IDENTIFIED BY '
   execute immediate 'grant connect to c##'
     || aadhar_id
     ||' container=all';
-    if (role = 'manager') then
-      execute immediate 'grant select, insert, update, delete on property_residential to c##'
+  if (role = 'manager') then
+    execute immediate 'grant select, insert, update, delete on property_residential to c##'
       || aadhar_id;
-      execute immediate 'grant select, insert, update, delete on property_commercial to c##'
+    execute immediate 'grant select, insert, update, delete on property_commercial to c##'
       || aadhar_id;
-      execute immediate 'grant select, insert, update, delete on property_history to c##'
+    execute immediate 'grant select, insert, update, delete on property_history to c##'
       || aadhar_id;
-      execute immediate 'grant select, insert, update, delete on records to c##'
+    execute immediate 'grant select, insert, update, delete on records to c##'
       || aadhar_id;
-      execute immediate 'grant select on users_history to c##'
+    execute immediate 'grant select on users_history to c##'
       || aadhar_id;
-      dbms_output.put_line('Assigned manager permissions to user with aadhar id '
+    dbms_output.put_line('Assigned manager permissions to user with aadhar id '
       || aadhar_id);
-    elsif (role = 'customer') then
-      execute immediate 'grant select on property_residential to c##'
+  elsif (role = 'customer') then
+    execute immediate 'grant select on property_residential to c##'
       || aadhar_id;
-      execute immediate 'grant select on property_commercial to c##'
+    execute immediate 'grant select on property_commercial to c##'
       || aadhar_id;
-      execute immediate 'grant select on property_history to c##'
+    execute immediate 'grant select on property_history to c##'
       || aadhar_id;
-      execute immediate 'grant select on records to c##'
+    execute immediate 'grant select on records to c##'
       || aadhar_id;
-      dbms_output.put_line('Assigned customer permissions to user with aadhar id '
+    dbms_output.put_line('Assigned customer permissions to user with aadhar id '
       || aadhar_id);
-    end if;
+  end if;
 end create_new_user;
 /
 
@@ -93,7 +93,7 @@ create or replace procedure insert_property_record(
   tenant_id int,
   number_of_bedrooms int default null
 )is
-  max_id int;
+  max_id      int;
   property_id int;
 begin
   if classification = 'commercial' then
@@ -124,15 +124,15 @@ begin
     );
     dbms_output.put_line( 'Inserted commercial property.' );
   elsif classification = 'residential' then
-    select 
-      max(property_id) into max_id 
-    from 
+    select
+      max(property_id) into max_id
+    from
       property_residential;
     if max_id is null then
       property_id := 2;
     else
       property_id := max_id + 2;
-    end if; 
+    end if;
     insert into property_residential values (
       property_id,
       address,
@@ -535,7 +535,7 @@ end rent_property;
 
 -- procedure to get rent history given property id and type
 create or replace procedure get_rent_history (
-  p_id int,
+  p_id int
 ) is
   var_owner_id            int;
   var_tenant_id           int;
@@ -546,7 +546,7 @@ create or replace procedure get_rent_history (
   var_owner_record_id     int;
   var_tenant_record_id    int;
   var_check_record_exists int;
-  classification          varchar2(20);
+  classification          varchar(20);
   cursor records_cursor is
     select
       property_record_id
@@ -557,9 +557,9 @@ create or replace procedure get_rent_history (
       and property_type = classification;
 begin
   if mod(p_id, 2) = 0 then
-    classification := 'commercial';
-  else
     classification := 'residential';
+  else
+    classification := 'commercial';
   end if;
   open records_cursor;
   loop
