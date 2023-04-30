@@ -536,7 +536,6 @@ end rent_property;
 -- procedure to get rent history given property id and type
 create or replace procedure get_rent_history (
   p_id int,
-  classification varchar
 ) is
   var_owner_id            int;
   var_tenant_id           int;
@@ -547,6 +546,7 @@ create or replace procedure get_rent_history (
   var_owner_record_id     int;
   var_tenant_record_id    int;
   var_check_record_exists int;
+  classification          varchar2(20);
   cursor records_cursor is
     select
       property_record_id
@@ -556,6 +556,11 @@ create or replace procedure get_rent_history (
       property_id = p_id
       and property_type = classification;
 begin
+  if mod(p_id, 2) = 0 then
+    classification := 'commercial';
+  else
+    classification := 'residential';
+  end if;
   open records_cursor;
   loop
     fetch records_cursor into var_property_record_id;
