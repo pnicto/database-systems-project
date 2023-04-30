@@ -42,11 +42,36 @@ CREATE USER c##'
 IDENTIFIED BY '
     || password
     ||' DEFAULT TABLESPACE "USERS"';
-  dbms_output.put_line('created user with aadhar id '
+  dbms_output.put_line('Created user with aadhar id '
     || aadhar_id);
   execute immediate 'grant connect to c##'
     || aadhar_id
-    ||' container=all ';
+    ||' container=all';
+    if (role = 'manager') then
+      execute immediate 'grant select, insert, update, delete on property_residential to c##'
+      || aadhar_id;
+      execute immediate 'grant select, insert, update, delete on property_commercial to c##'
+      || aadhar_id;
+      execute immediate 'grant select, insert, update, delete on property_history to c##'
+      || aadhar_id;
+      execute immediate 'grant select, insert, update, delete on records to c##'
+      || aadhar_id;
+      execute immediate 'grant select on users_history to c##'
+      || aadhar_id;
+      dbms_output.put_line('Assigned manager permissions to user with aadhar id '
+      || aadhar_id);
+    elsif (role = 'customer') then
+      execute immediate 'grant select on property_residential to c##'
+      || aadhar_id;
+      execute immediate 'grant select on property_commercial to c##'
+      || aadhar_id;
+      execute immediate 'grant select on property_history to c##'
+      || aadhar_id;
+      execute immediate 'grant select on records to c##'
+      || aadhar_id;
+      dbms_output.put_line('Assigned customer permissions to user with aadhar id '
+      || aadhar_id);
+    end if;
 end create_new_user;
 /
 
