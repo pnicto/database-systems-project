@@ -5,21 +5,22 @@ set serveroutput on;
 -- procedure to create new user
 create or replace procedure create_new_user (
   aadhar_id int,
-  name varchar,
-  password varchar,
+  aname varchar2,
+  password varchar2,
   age int,
-  door_number varchar,
-  city varchar,
-  street varchar,
-  pincode varchar,
-  role varchar,
-  phone varchar
+  door_number varchar2,
+  city varchar2,
+  street varchar2,
+  pincode varchar2,
+  role varchar2,
+  phone varchar2
 )is
+  tmp_query varchar(200);
 begin
  -- insert into users table
   insert into users values (
     aadhar_id,
-    name,
+    aname,
     password,
     age,
     door_number,
@@ -33,8 +34,19 @@ begin
     aadhar_id,
     phone
   );
-  dbms_output.put_line('Created user with aadhar id '
+ -- create user in db
+  execute immediate '
+CREATE USER c##'
+    || aadhar_id
+    ||' PROFILE "DEFAULT"
+IDENTIFIED BY '
+    || password
+    ||' DEFAULT TABLESPACE "USERS"';
+  dbms_output.put_line('created user with aadhar id '
     || aadhar_id);
+  execute immediate 'grant connect to c##'
+    || aadhar_id
+    ||' container=all ';
 end create_new_user;
 /
 
