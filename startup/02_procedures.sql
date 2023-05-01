@@ -465,7 +465,27 @@ create or replace procedure rent_property(
   var_owner_record_id    int;
   var_property_record_id int;
   var_tenant_record_id   int;
+  var_current_tenant_id  int;
 begin
+  if classification = 'commercial' then
+    select
+      tenant_id into var_current_tenant_id
+    from
+      property_commercial
+    where
+      property_id = p_id;
+  elsif classification = 'residential' then
+    select
+      tenant_id into var_current_tenant_id
+    from
+      property_residential
+    where
+      property_id = p_id;
+  end if;
+  if var_current_tenant_id is not null then
+    dbms_output.put_line('Property is already rented to a tenant');
+    return;
+  end if;
  -- update the tenant id in the respective property table
   if classification = 'commercial' then
     update property_commercial
