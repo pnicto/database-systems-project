@@ -178,7 +178,6 @@ begin
         where
           aadhar_id = user_id;
     begin
-      dbms_output.put_line('Details of the tenant are');
       for u in print_line loop
         dbms_output.put_line('aadhar_id '
           || u.aadhar_id
@@ -222,7 +221,6 @@ begin
         where
           aadhar_id = user_id;
     begin
-      dbms_output.put_line('Details of the tenant are');
       for u in print_line loop
         dbms_output.put_line('aadhar_id '
           || u.aadhar_id
