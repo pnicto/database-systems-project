@@ -161,50 +161,96 @@ create or replace procedure get_tenant_details (
 )is
   user_id int;
 begin
- --  To get the user id which is used to get the remaining user details
-  select
-    tenant_id into user_id
-  from
-    property_residential
-  where
-    property_id = prop_id;
+  if mod(prop_id, 2) = 0 then
+    select
+      tenant_id into user_id
+    from
+      property_residential
+    where
+      property_id = prop_id;
  -- cursor to print the details
-  declare
-    cursor print_line is
-      select
-        *
-      from
-        users
-      where
-        aadhar_id = user_id;
-  begin
-    dbms_output.put_line('Details of the tenant are');
-    for u in print_line loop
-      dbms_output.put_line('aadhar_id '
-        || u.aadhar_id
-        || chr(10)
-        || 'name '
-        || u.name
-        || chr(10)
-        || 'age '
-        || u.age
-        || chr(10)
-        || 'door_number '
-        || u.door_number
-        || chr(10)
-        || 'city '
-        || u.city
-        || chr(10)
-        || 'street '
-        || u.street
-        || chr(10)
-        || 'pincode '
-        || u.pincode
-        || chr(10)
-        || 'role '
-        || u.role );
-    end loop;
-  end;
+    declare
+      cursor print_line is
+        select
+          *
+        from
+          users
+        where
+          aadhar_id = user_id;
+    begin
+      dbms_output.put_line('Details of the tenant are');
+      for u in print_line loop
+        dbms_output.put_line('aadhar_id '
+          || u.aadhar_id
+          || chr(10)
+          || 'name '
+          || u.name
+          || chr(10)
+          || 'age '
+          || u.age
+          || chr(10)
+          || 'door_number '
+          || u.door_number
+          || chr(10)
+          || 'city '
+          || u.city
+          || chr(10)
+          || 'street '
+          || u.street
+          || chr(10)
+          || 'pincode '
+          || u.pincode
+          || chr(10)
+          || 'role '
+          || u.role );
+      end loop;
+    end;
+  else
+    select
+      tenant_id into user_id
+    from
+      property_commercial
+    where
+      property_id = prop_id;
+ -- cursor to print the details
+    declare
+      cursor print_line is
+        select
+          *
+        from
+          users
+        where
+          aadhar_id = user_id;
+    begin
+      dbms_output.put_line('Details of the tenant are');
+      for u in print_line loop
+        dbms_output.put_line('aadhar_id '
+          || u.aadhar_id
+          || chr(10)
+          || 'name '
+          || u.name
+          || chr(10)
+          || 'age '
+          || u.age
+          || chr(10)
+          || 'door_number '
+          || u.door_number
+          || chr(10)
+          || 'city '
+          || u.city
+          || chr(10)
+          || 'street '
+          || u.street
+          || chr(10)
+          || 'pincode '
+          || u.pincode
+          || chr(10)
+          || 'role '
+          || u.role );
+      end loop;
+    end;
+  end if;
+ --  To get the user id which is used to get the remaining user details
 end get_tenant_details;
 /
 
