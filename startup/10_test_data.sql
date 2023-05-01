@@ -2,6 +2,8 @@ connect c##project_dba/password;
 
 set serveroutput on;
 
+execute create_new_user (205161944090, 'project_dba', 'password', 58, '815', 'Hyderabad', 'Krishna Circle', '065374', 'dba', '6390064081');
+
 execute create_new_user (205161944040, 'Ojas Dhar', 'password', 58, '815', 'Haridwar', 'Balasubramanian Marg', '065374', 'customer', '6390064081');
 
 execute create_new_user (820655938098, 'Shalv Chahal', 'password', 24, '306', 'Kota', 'Jhaveri Path', '874070', 'customer', '0248989667');
@@ -95,3 +97,15 @@ execute rent_property(3, 116500671542, 'commercial', date '2024-04-30');
 execute rent_property(3, 205161944040, 'commercial', date '2025-04-30');
 
 execute rent_property(3, 441844869868, 'commercial', date '2026-04-30');
+
+-- execute insert_property_record('commercial', '30/132, Sekhon Circle, Kolkata 447769', 8, 10, 32, 63, 18100, 'Kolkata', date '2022-06-01', date '2024-06-01', 1913, 'shop', 492673121695, null);
+
+-- execute create_new_user (4418448698342, 'John Doe', 'password', 57, '536', 'Tiruchirappalli', 'Sarma Street', '948716', 'customer', '8946307439');
+
+-- execute rent_property(21, 4418448698342, 'commercial', date '2026-04-30');
+
+-- execute get_rent_history(21);
+
+-- execute get_tenant_details(21);
+
+-- execute get_property_records(492673121695);
